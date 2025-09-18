@@ -229,3 +229,71 @@ textarea {
   opacity: 0.8;
   text-decoration: underline;
 }
+
+/* Field wrapper */
+.field {
+  display: grid;
+  gap: 4px;
+}
+.field__label {
+  font-size: var(--fs-0);
+  color: var(--muted);
+}
+.field__control {
+  position: relative;
+}
+.field__hint {
+  font-size: 12px;
+  color: var(--muted);
+}
+.field__error {
+  font-size: 12px;
+  color: #e11d48;
+}
+
+/* Prefix / Suffix */
+.field__prefix,
+.field__suffix {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
+}
+.field__prefix {
+  left: 0.6rem;
+}
+.field__suffix {
+  right: 0.6rem;
+}
+
+/* Input states & sizes (روی .input موجودت سوار می‌شه) */
+.input.has-prefix {
+  padding-left: 2rem;
+}
+.input.has-suffix {
+  padding-right: 2rem;
+}
+.input.is-invalid {
+  border-color: #e11d48;
+  outline-color: #e11d48;
+}
+.input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.input::placeholder {
+  color: color-mix(in oklab, var(--fg) 50%, white 50%);
+}
+
+/* اختیاری: سایزبندی */
+.input--sm {
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  font-size: var(--fs-0);
+}
+.input--lg {
+  padding: 0.7rem 1rem;
+  border-radius: var(--radius-lg);
+  font-size: var(--fs-2);
+}
