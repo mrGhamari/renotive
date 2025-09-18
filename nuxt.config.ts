@@ -7,6 +7,10 @@ export default defineNuxtConfig({
       title: 'Sample Project',
     },
   },
+  components: {
+    global: true,
+    dirs: ['@/components/ui'],
+  },
   modules: ['@vueuse/nuxt'],
   css: ['@/assets/main.css'],
 });
