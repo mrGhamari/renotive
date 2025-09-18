@@ -3,7 +3,7 @@
     <div class="container" style="display: flex; align-items: center">
       <div style="display: flex; gap: 0.5rem; align-items: center">
         <div class="box-color" />
-        <strong>Renotive Task</strong>
+        <strong>Sample Project</strong>
       </div>
     </div>
   </header>
