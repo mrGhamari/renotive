@@ -159,7 +159,7 @@ textarea {
     backdrop-filter: saturate(180%) blur(8px);
   }
 }
-.mn {
+.main {
   flex: 1;
 }
 .ft {
