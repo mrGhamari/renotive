@@ -1,5 +1,4 @@
 export default defineEventHandler(async (event) => {
-  // Cache برای SSR/CDN به سبک SWR
   setHeader(
     event,
     'Cache-Control',
