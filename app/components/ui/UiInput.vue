@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 
 // ------ Variables ------
+const slots = useSlots();
 const inputRef = ref<HTMLInputElement>();
 defineExpose({ focus: () => inputRef.value?.focus() });
 const model = defineModel<string | number | null>({ default: '' });
@@ -25,6 +26,21 @@ const props = withDefaults(
 const uid = computed(
   () => props.id ?? `in-${Math.random().toString(36).slice(2, 8)}`
 );
+const inputClass = computed(() => ({
+  'is-invalid': !!props.error,
+  'has-prefix': !!slots.prefix,
+  'has-suffix': !!slots.suffix,
+  'input--sm': props.size === 'sm',
+  'input--lg': props.size === 'lg',
+}));
+
+const describedBy = computed<string | undefined>(() => {
+  const id = uid.value;
+  const ids: string[] = [];
+  if (props.error) ids.push(`${id}-err`);
+  if (props.hint) ids.push(`${id}-hint`);
+  return ids.length ? ids.join(' ') : undefined;
+});
 
 // ------ Methods ------
 function onInput(e: Event) {
@@ -43,37 +59,27 @@ function onInput(e: Event) {
     <span v-if="label" class="field__label">{{ label }}</span>
 
     <div class="field__control">
-      <span v-if="$slots.prefix" class="field__prefix"
-        ><slot name="prefix"
-      /></span>
+      <span v-if="$slots.prefix" class="field__prefix">
+        <slot name="prefix" />
+      </span>
 
       <input
-        ref="inputRef"
         :id="uid"
+        :type="type"
         class="input"
-        :class="[
-          {
-            'is-invalid': !!error,
-            'has-prefix': !!$slots.prefix,
-            'has-suffix': !!$slots.suffix,
-          },
-          size === 'sm' && 'input--sm',
-          size === 'lg' && 'input--lg',
-        ]"
-        :type="props.type"
-        :placeholder="placeholder"
-        :disabled="disabled"
+        ref="inputRef"
+        :class="inputClass"
         :value="model ?? ''"
-        @input="onInput"
+        :disabled="disabled"
         :aria-invalid="!!error"
-        :aria-describedby="
-          error ? uid + '-err' : hint ? uid + '-hint' : undefined
-        "
+        :placeholder="placeholder"
+        :aria-describedby="describedBy"
+        @input="onInput"
       />
 
-      <span v-if="$slots.suffix" class="field__suffix"
-        ><slot name="suffix"
-      /></span>
+      <span v-if="$slots.suffix" class="field__suffix">
+        <slot name="suffix" />
+      </span>
     </div>
 
     <p v-if="error" class="field__error" :id="uid + '-err'">{{ error }}</p>
