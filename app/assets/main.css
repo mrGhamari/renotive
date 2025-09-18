@@ -104,6 +104,7 @@ a:hover {
   box-shadow: var(--shadow-sm);
 }
 .btn {
+  cursor: pointer;
   border: 1px solid var(--br);
   border-radius: var(--radius);
   padding: 0.55rem 0.9rem;
@@ -299,4 +300,56 @@ textarea {
   padding: 0.7rem 1rem;
   border-radius: var(--radius-lg);
   font-size: var(--fs-2);
+}
+
+/* variants & sizes */
+.btn--ghost {
+  background: transparent;
+}
+.btn--danger {
+  background: #ef4444;
+  border-color: transparent;
+  color: #fff;
+}
+.btn--sm {
+  padding: 0.35rem 0.6rem;
+  border-radius: 10px;
+  font-size: var(--fs-0);
+}
+.btn--lg {
+  padding: 0.7rem 1rem;
+  border-radius: var(--radius-lg);
+  font-size: var(--fs-2);
+}
+.btn--block {
+  width: 100%;
+}
+
+/* loading state */
+.btn.is-loading {
+  position: relative;
+  pointer-events: none;
+}
+.btn.is-loading > * {
+  opacity: 0;
+} /* متن/آیکن محو می‌شود */
+.btn__spinner {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.btn__spinner::before {
+  content: '';
+  width: 1rem;
+  height: 1rem;
+  border-radius: 999px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
 }
