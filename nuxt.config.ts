@@ -1,6 +1,12 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
+  devtools: { enabled: false },
+  app: {
+    head: {
+      htmlAttrs: { lang: 'en' },
+      title: 'Sample Project',
+    },
+  },
   modules: ['@vueuse/nuxt'],
   css: ['@/assets/main.css'],
 });
