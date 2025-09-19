@@ -1,4 +1,3 @@
-<!-- pages/products.vue -->
 <template>
   <section class="product-page">
     <div class="container">
@@ -20,7 +19,7 @@
     <div class="container">
       <div class="grid12">
         <div class="grid12__item" v-for="p in items" :key="p.id">
-          <ProductCard :product="p" @view="modalOpen = true" />
+          <ProductCard :product="p" @view="openView" />
         </div>
       </div>
 
@@ -35,12 +34,7 @@
       <div ref="infiniteEl" style="height: 1px"></div>
     </div>
     <ClientOnly>
-      <ProductModal
-        v-model:open="modalOpen"
-        :mode="modalMode"
-        :product-id="selectedId"
-        @created="onCreated"
-      />
+      <ProductModal v-model:open="detailOpen" :product-id="selectedId" />
     </ClientOnly>
     <ClientOnly>
       <ProductCreateModal v-model:open="createOpen" @created="onCreated" />
@@ -75,8 +69,7 @@ const reachedEnd = ref<boolean>(false);
 const debouncedQ = ref(userSearch.value);
 const sortDir = ref<'asc' | 'desc'>('asc');
 const infiniteEl = ref<HTMLElement | null>(null);
-const modalOpen = ref<boolean>(false);
-const modalMode = ref<'view' | 'create' | 'edit'>('view');
+const detailOpen = ref<boolean>(false);
 const selectedId = ref<number | null>(null);
 
 // ------ Computed ------
@@ -162,15 +155,13 @@ onMounted(() => {
 });
 
 // ------ Method ------
-function openView(id: number) {
-  selectedId.value = id;
-  modalMode.value = 'view';
-  modalOpen.value = true;
+function openView(product: IProduct) {
+  selectedId.value = product.id;
+  detailOpen.value = true;
 }
 function openCreate() {
   selectedId.value = null;
-  modalMode.value = 'create';
-  modalOpen.value = true;
+  createOpen.value = true;
 }
 
 function onCreated() {
