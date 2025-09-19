@@ -1,59 +1,21 @@
 <script setup lang="ts">
-/* Types (در صورت داشتن types سراسری، حذف/ایمپورت کن) */
-export type IDimensions = { width: number; depth: number; height: number };
-export type IReview = {
-  date: string;
-  rating: number;
-  comment: string;
-  reviewerName: string;
-  reviewerEmail: string;
-};
-export type IMeta = {
-  qrCode: string;
-  barcode: string;
-  createdAt: string;
-  updatedAt: string;
-};
-export type IProduct = {
-  id: number;
-  sku: string;
-  meta: IMeta;
-  title: string;
-  price: number;
-  stock: number;
-  brand: string;
-  weight: number;
-  tags: string[];
-  rating: number;
-  category: string;
-  images: string[];
-  thumbnail: string;
-  reviews: IReview[];
-  description: string;
-  returnPolicy: string;
-  dimensions: IDimensions;
-  discountPercentage: number;
-  availabilityStatus: string;
-  warrantyInformation: string;
-  shippingInformation: string;
-  minimumOrderQuantity: number;
-};
+import type { IProduct } from '~/types/product';
 
+// ------ Props and Emits ------
 const props = withDefaults(
   defineProps<{
     product: IProduct;
-    compact?: boolean; // حالت فشرده کارت
-    to?: string; // لینک جزئیات (اختیاری)
+    compact?: boolean;
+    to?: string;
   }>(),
   { compact: false }
 );
-
 const emit = defineEmits<{
   (e: 'add', p: IProduct): void;
   (e: 'view', p: IProduct): void;
 }>();
 
-/* محاسبات نمایش */
+// ------ Computed ------
 const hasDiscount = computed(() => props.product.discountPercentage > 0);
 const priceFinal = computed(() => {
   return hasDiscount.value
@@ -93,7 +55,6 @@ function viewDetails() {
 
 <template>
   <article class="card prod">
-    <!-- تصویر -->
     <div
       class="prod__media"
       @click="viewDetails"
@@ -115,7 +76,6 @@ function viewDetails() {
       </div>
     </div>
 
-    <!-- بدنه -->
     <div class="prod__body">
       <header class="prod__head">
         <h3 class="prod__title" :title="product.title">
@@ -165,14 +125,12 @@ function viewDetails() {
 </template>
 
 <style scoped>
-/* ـــــ wrapper عمومی کارت ـــــ */
 .prod {
   display: grid;
   gap: var(--sp-3);
   overflow: hidden;
 }
 
-/* ـــــ تصویر ـــــ */
 .prod__media {
   position: relative;
   border-radius: var(--radius-sm);
@@ -193,7 +151,6 @@ function viewDetails() {
   aspect-ratio: 4 / 3;
 }
 
-/* نشان تخفیف */
 .prod__badge {
   position: absolute;
   top: 8px;
@@ -207,13 +164,11 @@ function viewDetails() {
   box-shadow: var(--shadow-sm);
 }
 
-/* ـــــ بدنه ـــــ */
 .prod__body {
   display: grid;
   gap: var(--sp-3);
 }
 
-/* هدر کارت */
 .prod__head {
   display: grid;
   gap: 2px;
@@ -237,7 +192,6 @@ function viewDetails() {
   color: var(--muted);
 }
 
-/* قیمت و امتیاز */
 .prod__meta {
   display: flex;
   align-items: center;
@@ -261,9 +215,8 @@ function viewDetails() {
 .prod__rating {
   font-size: var(--fs-0);
   color: #b7791f;
-} /* کهربایی ملایم */
+}
 
-/* توضیح کوتاه */
 .prod__desc {
   margin: 0;
   color: color-mix(in oklab, var(--fg) 70%, white 30%);
@@ -273,14 +226,12 @@ function viewDetails() {
   overflow: hidden;
 }
 
-/* تگ‌ها */
 .prod__tags {
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem;
 }
 
-/* اطلاعات وضعیت/دسته */
 .prod__info {
   display: flex;
   justify-content: space-between;
@@ -289,18 +240,17 @@ function viewDetails() {
 }
 .prod__stock[data-tone='ok'] {
   color: #166534;
-} /* سبز ملایم */
+}
 .prod__stock[data-tone='warn'] {
   color: #a16207;
-} /* زرد تیره */
+}
 .prod__stock[data-tone='danger'] {
   color: #991b1b;
-} /* قرمز تیره */
+}
 .prod__cat {
   color: var(--muted);
 }
 
-/* اکشن‌ها */
 .prod__actions {
   display: flex;
   gap: 0.5rem;
@@ -309,7 +259,6 @@ function viewDetails() {
   flex: 1;
 }
 
-/* ریسپانسیو ریز */
 @media (max-width: 480px) {
   .prod__price--final {
     font-size: var(--fs-2);
