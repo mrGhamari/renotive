@@ -7,16 +7,20 @@
         <div class="search">
           <ui-input v-model="userSearch" placeholder="Search Product" />
         </div>
-        <ui-button class="create" size="sm" variant="primary"
-          >Create New Product</ui-button
-        >
+        <ui-button
+          class="create"
+          size="sm"
+          variant="primary"
+          @click="openCreate"
+          >Create New Product
+        </ui-button>
       </div>
     </div>
 
     <div class="container">
       <div class="grid12">
         <div class="grid12__item" v-for="p in items" :key="p.id">
-          <ProductCard :product="p" />
+          <ProductCard :product="p" @view="modalOpen = true" />
         </div>
       </div>
 
@@ -30,12 +34,25 @@
 
       <div ref="infiniteEl" style="height: 1px"></div>
     </div>
+    <ClientOnly>
+      <ProductModal
+        v-model:open="modalOpen"
+        :mode="modalMode"
+        :product-id="selectedId"
+        @created="onCreated"
+      />
+    </ClientOnly>
+    <ClientOnly>
+      <ProductCreateModal v-model:open="createOpen" @created="onCreated" />
+    </ClientOnly>
   </section>
 </template>
 
 <script setup lang="ts">
 import type { IProduct } from '~/types/product';
-import ProductCard from '~/components/productCard.vue';
+import ProductCard from '~/components/product/productCard.vue';
+import ProductModal from '~/components/product/productModal.vue';
+import ProductCreateModal from '~/components/product/productCreateModal.vue';
 import { useInfiniteScroll, watchDebounced } from '@vueuse/core';
 
 // ------ Type ------
@@ -53,12 +70,14 @@ const total = ref<number>(0);
 const seenIds = new Set<number>();
 const items = ref<IProduct[]>([]);
 const userSearch = ref<string>('');
+const createOpen = ref<boolean>(false);
 const reachedEnd = ref<boolean>(false);
 const debouncedQ = ref(userSearch.value);
 const sortDir = ref<'asc' | 'desc'>('asc');
 const infiniteEl = ref<HTMLElement | null>(null);
-
-
+const modalOpen = ref<boolean>(false);
+const modalMode = ref<'view' | 'create' | 'edit'>('view');
+const selectedId = ref<number | null>(null);
 
 // ------ Computed ------
 const initialLoading = computed(() => pending.value && page.value === 1);
@@ -141,6 +160,25 @@ onMounted(() => {
     }
   );
 });
+
+// ------ Method ------
+function openView(id: number) {
+  selectedId.value = id;
+  modalMode.value = 'view';
+  modalOpen.value = true;
+}
+function openCreate() {
+  selectedId.value = null;
+  modalMode.value = 'create';
+  modalOpen.value = true;
+}
+
+function onCreated() {
+  page.value = 1;
+  items.value = [];
+  total.value = 0;
+  reachedEnd.value = false;
+}
 </script>
 
 <style scoped>
